@@ -24,6 +24,7 @@
         .container {
             margin: auto 2%;
         }
+
     </style>
 </head>
 <body>
@@ -55,4 +56,17 @@
         </a>
     </nav>
 </body>
+
+<script type="text/javascript">
+    window.onload = function() {
+        var tabs = document.getElementsByClassName("tab-item");
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].onclick = function() {
+                for (var i = 0; i < tabs.length; i++)
+                    tabs[i].className = "tab-item";
+                this.className = "tab-item active";
+            }
+        }
+    }
+</script>
 </html>
