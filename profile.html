@@ -1,3 +1,4 @@
+<!-- TODO: Update values to fit name -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +16,6 @@
 
     <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
-    <script src="js/ratchet.min.js"></script>
 
     <style type="text/css">
         input[type="search"] {
@@ -72,7 +72,7 @@
         <div class="profile-header">
             <img src="images/default.gif" id="user-image">
             <div class="name-description">
-                <h2 id="name">Eryk S.</h2>
+                <h2 id="name">Artist Name</h2>
             </div>
             <div class="clear"></div>
         </div>
@@ -134,11 +134,11 @@
             <span class="icon icon-person"></span>
             <span class="tab-label">Profile</span>
         </a>
-        <a class="tab-item" href="#" style="text-decoration: none;">
+        <a class="tab-item" href="discover.html" style="text-decoration: none;">
             <span class="icon icon-star-filled"></span>
             <span class="tab-label">Favorites</span>
         </a>
-        <a class="tab-item" href="#" style="text-decoration: none;">
+        <a class="tab-item" href="tabs.html" style="text-decoration: none;">
             <span class="icon icon-search"></span>
             <span class="tab-label">Search</span>
         </a>
@@ -148,17 +148,4 @@
         </a>
     </nav>
 </body>
-
-<script type="text/javascript">
-    window.onload = function() {
-        var tabs = document.getElementsByClassName("tab-item");
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].onclick = function() {
-                for (var i = 0; i < tabs.length; i++)
-                    tabs[i].className = "tab-item";
-                this.className = "tab-item active";
-            }
-        }
-    }
-</script>
 </html>

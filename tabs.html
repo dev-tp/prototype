@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
-    <script src="js/ratchet.min.js"></script>
 
     <style type="text/css">
         input[type="search"] {
@@ -34,19 +33,19 @@
         </form>
     </div>
     <nav class="bar bar-tab">
-        <a class="tab-item active" href="#">
+        <a class="tab-item" href="#">
             <span class="icon icon-home"></span>
             <span class="tab-label">Home</span>
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" href="profile.html">
             <span class="icon icon-person"></span>
             <span class="tab-label">Profile</span>
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" href="discover.html">
             <span class="icon icon-star-filled"></span>
             <span class="tab-label">Favorites</span>
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item active" href="#">
             <span class="icon icon-search"></span>
             <span class="tab-label">Search</span>
         </a>
@@ -56,17 +55,4 @@
         </a>
     </nav>
 </body>
-
-<script type="text/javascript">
-    window.onload = function() {
-        var tabs = document.getElementsByClassName("tab-item");
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].onclick = function() {
-                for (var i = 0; i < tabs.length; i++)
-                    tabs[i].className = "tab-item";
-                this.className = "tab-item active";
-            }
-        }
-    }
-</script>
 </html>
