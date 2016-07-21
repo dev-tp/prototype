@@ -9,9 +9,6 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-    <!-- Sets initial viewport load and disables zooming  -->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-
     <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -27,7 +24,8 @@
         }
         .container {
             margin: auto 2%;
-            overflow: scroll;
+            overflow-x: hidden;
+            overflow-y: scroll;
             height: 90%;
         }
         #user-image {
@@ -38,7 +36,7 @@
         }
         .name-description {
             float: right;
-            margin: 0 60% 0 0;
+            margin: 0 62% 0 0;
         }
         .clear { clear: both; }
         .profile-header { padding: 30px 0 30px 15px; }
@@ -49,7 +47,19 @@
         }
         #name { padding: 30px; }
 
-        /*@media screen and (min-width: 360px) {}*/
+        @media screen and (max-width: 720px) {
+            .name-description { margin: 0 62% 0 0; } /*0 50% 0 0*/
+            #name { margin: 0 25% 0 0; }
+        }
+        @media screen and (max-width: 690px) {
+            .name-description { margin: 0 35% 0 0; }
+            #name { margin: 0 40% 0 0; }
+        }
+
+        @media screen and (max-width: 360px) {
+            .name-description { margin: 0 -21% 0 0; }
+            #name { padding: 0 45px 0 0; }
+        }
     </style>
 </head>
 <body>
@@ -58,11 +68,11 @@
     </header>
     <div class="container">
 
+        <!-- TODO: Find a way to automatically resize #name right-padding -->
         <div class="profile-header">
             <img src="images/default.gif" id="user-image">
             <div class="name-description">
                 <h2 id="name">Eryk S.</h2>
-                <!-- <p id="description">Hello, World!</p> -->
             </div>
             <div class="clear"></div>
         </div>
@@ -78,7 +88,6 @@
             </p>
         </div>
 
-        <!-- TODO: Add bottom margin to carousel -->
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carousel-example-generic" data-slide-to="1" class="active"></li>
