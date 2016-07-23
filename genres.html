@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grid Layout</title>
+    <meta charset="utf-8">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
+
+    <style type="text/css">
+        body { margin: 0; }
+
+        .grid-container {
+            margin: 20px 2%;
+            width: 100%;
+        }
+
+        .row:before,
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .column {
+            float: left;
+            min-height: 1px;
+            width: 29.5%;
+            padding: 12px;
+            /*background-color: #ffdcdc;*/
+        }
+
+        /*.outline, .outline * { outline: 1px solid #f6a1a1; }*/
+
+        img {
+            width: 33.33%;
+            height: 33.33%;
+            margin: 0 33.33%;
+        }
+
+        .grid-container {
+            overflow-x: hidden;
+            overflow-y: scroll;
+            height: 90%;
+        }
+
+        .column h4 {
+            margin: 0 33.33%;
+        }
+    </style>
+</head>
+<body>
+    <header class="bar bar-nav" style="position: initial;">
+        <h1 class="title">Genres</h1>
+    </header>
+
+    <!-- TODO: resize column height -->
+    <div class="grid-container"> <!-- outline -->
+        <div class="row">
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre one</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre two</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre three</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre four</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre five</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre six</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre seven</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre eight</h4>
+                </a>
+            </div>
+            <div class="column">
+                <a href="#">
+                    <img src="images/200x200/album_image.png">
+                    <h4>Genre nine</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bar bar-tab">
+        <a class="tab-item active" href="#" style="text-decoration: none;">
+            <span class="icon icon-home"></span>
+            <span class="tab-label">Home</span>
+        </a>
+        <a class="tab-item" href="profile.html" style="text-decoration: none;">
+            <span class="icon icon-person"></span>
+            <span class="tab-label">Profile</span>
+        </a>
+        <a class="tab-item" href="discover.html" style="text-decoration: none;">
+            <span class="icon icon-star-filled"></span>
+            <span class="tab-label">Favorites</span>
+        </a>
+        <a class="tab-item" href="search.html" style="text-decoration: none;">
+            <span class="icon icon-search"></span>
+            <span class="tab-label">Search</span>
+        </a>
+        <a class="tab-item" href="#" style="text-decoration: none;">
+            <span class="icon icon-gear"></span>
+            <span class="tab-label">Settings</span>
+        </a>
+    </nav>
+</body>
+</html>
