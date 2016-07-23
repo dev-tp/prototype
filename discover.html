@@ -9,41 +9,21 @@
 
     <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
+
+    <style type="text/css">
+        .table-view {
+            overflow-x: hidden;
+            overflow-y: scroll;
+            height: 98%;
+        }
+    </style>
 </head>
 <body>
     <header class="bar bar-nav" style="position: initial;">
         <h1 class="title">Discover</h1>
     </header>
 
-    <ul class="table-view">
-        <li class="table-view-cell media">
-            <a class="navigate-right">
-            <img class="media-object pull-left" src="http://placehold.it/42x42">
-            <div class="media-body">
-                Item 1
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.</p>
-            </div>
-            </a>
-        </li>
-        <li class="table-view-cell media">
-            <a class="navigate-right">
-            <img class="media-object pull-left" src="http://placehold.it/42x42">
-            <div class="media-body">
-                Item 1
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.</p>
-            </div>
-            </a>
-        </li>
-        <li class="table-view-cell media">
-            <a class="navigate-right">
-            <img class="media-object pull-left" src="http://placehold.it/42x42">
-            <div class="media-body">
-                Item 1
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.</p>
-            </div>
-            </a>
-        </li>
-    </ul>
+    <ul class="table-view"></ul>
 
     <nav class="bar bar-tab">
         <a class="tab-item" href="genres.html">
@@ -67,5 +47,42 @@
             <span class="tab-label">Settings</span>
         </a>
     </nav>
+
+    <script type="text/javascript">
+        // TODO: With a database, update discover titles
+        function generateItem() {
+            var tableViewCell = document.createElement("li");
+            tableViewCell.className = "table-view-cell media";
+
+            var navigateRight = document.createElement('a');
+            navigateRight.className = "navigate-right";
+
+            var mediaObject = document.createElement("img");
+            mediaObject.src = "http://placehold.it/42x42";
+            mediaObject.className = "media-object pull-left";
+
+            var mediaBody = document.createElement("div");
+            mediaBody.className = "media-body";
+
+            var header = document.createElement("h4");
+            header.innerHTML = "Item 1";
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.";
+
+            mediaBody.appendChild(header);
+            mediaBody.appendChild(paragraph);
+            navigateRight.appendChild(mediaObject);
+            navigateRight.appendChild(mediaBody);
+            tableViewCell.appendChild(navigateRight);
+
+            return tableViewCell;
+        }
+
+        window.onload = function() {
+            var tableView = document.getElementsByClassName("table-view")[0];
+            for (var i = 0; i < Math.round(Math.random() * 10); i++)
+                tableView.appendChild(generateItem());
+        }
+    </script>
 </body>
 </html>
