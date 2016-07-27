@@ -85,6 +85,10 @@
     </div>
 </body>
 <script type="text/javascript">
-    window.onload = window.setTimeout(() => { $("#splashscreen").fadeOut(1000); }, 2000);
+    function fade() {
+        $("#splashscreen").fadeOut(1000);
+    }
+    document.getElementById("splashscreen").addEventListener("click", fade);
+    window.onload = window.setTimeout(fade, 2000);
 </script>
 </html>
