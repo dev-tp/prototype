@@ -16,6 +16,12 @@
             overflow-y: scroll;
             height: 98%;
         }
+        .navigate-right::after { content: ' '; }
+        .lit-button {
+            position: absolute;
+            top: 30%;
+            right: 15px;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +60,7 @@
             var tableViewCell = document.createElement("li");
             tableViewCell.className = "table-view-cell media";
 
-            var navigateRight = document.createElement('a');
+            var navigateRight = document.createElement("div");
             navigateRight.className = "navigate-right";
 
             var mediaObject = document.createElement("img");
@@ -73,9 +79,43 @@
             mediaBody.appendChild(paragraph);
             navigateRight.appendChild(mediaObject);
             navigateRight.appendChild(mediaBody);
+            navigateRight.appendChild(generateLitButton());
             tableViewCell.appendChild(navigateRight);
 
             return tableViewCell;
+        }
+
+        function generateLitButton() {
+            var img = document.createElement("img");
+            var count = document.createElement('p');
+            var centre = document.createElement("center");
+
+            img.src = "images/20x20/lit.png";
+            count.textContent = 0;
+
+            centre.appendChild(img);
+            centre.appendChild(count);
+            centre.className = "lit-button";
+            centre.active = false;
+
+            centre.addEventListener("click", function() {
+                var image = this.childNodes[0];
+                var count = this.childNodes[1];
+                var currentCount = parseInt(count.textContent);
+
+                // TODO: Retrieve information from Firebase and update it
+                if (!this.active) {
+                    image.src = "images/20x20/lit-active.png";
+                    count.textContent = ++currentCount;
+                    this.active = true;
+                } else {
+                    image.src = "images/20x20/lit.png";
+                    count.textContent = --currentCount;
+                    this.active = false;
+                }
+            });
+
+            return centre;
         }
 
         window.onload = function() {
