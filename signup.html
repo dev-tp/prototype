@@ -10,10 +10,12 @@
     <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
 
+    <script src="js/firebase-3.2.1.js"></script>
+
     <style type="text/css">
         .container { padding: 30% 5%; }
 
-        #seethrough-screen {
+        #see-through-screen {
             position: absolute;
             width: 100%;
             top: 0;
@@ -25,8 +27,8 @@
 
         #confirm-box {
             position: absolute;
-            width: 15em; /* 60% */
-            height: 15em; /* 40% */
+            width: 15em;
+            height: 15em;
             top: 25%;
             left: 25%;
             background-color: #fff;
@@ -35,7 +37,7 @@
 
         #confirm-box h1 {
             text-align: center;
-            padding: 1em 0; /* 10% 0 */
+            padding: 1em 0;
         }
 
         #content { margin: 10%; }
@@ -52,7 +54,7 @@
         <button onclick="signUp();" class="btn btn-positive btn-block">Sign Up</button>
     </div>
 
-    <div id="seethrough-screen"></div>
+    <div id="see-through-screen"></div>
     <div id="confirm-box">
         <div id="content">
             <h1 id="message"></h1>
@@ -60,20 +62,19 @@
         </div>
     </div>
 </body>
-<script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
 <script type="text/javascript">
     var config = {
-        apiKey: "AIzaSyDAnnqD7oGzIHEgeuUq_KIau72H9TbcvSs",
-        authDomain: "prototype-795b9.firebaseapp.com",
-        databaseURL: "https://prototype-795b9.firebaseio.com",
-        storageBucket: "prototype-795b9.appspot.com",
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        storageBucket: "",
     };
 
     firebase.initializeApp(config);
 
     function signUp() {
         var email = document.getElementsByTagName("input")[0].value;
-        var username = document.getElementsByTagName("input")[1].value;
+        localStorage.username = document.getElementsByTagName("input")[1].value;
         var password = document.getElementsByTagName("input")[2].value;
         var confirmedPassword = document.getElementsByTagName("input")[3].value;
 
@@ -87,15 +88,16 @@
                 displayPopup("ERROR", "Password is too short!");
                 return;
             } else {
-                firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+                firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+                    displayPopup("SUCCESS", "Success!");
+                    // sendConfirmationEmail();
+                }).catch(function(error) {
                     if (error.code === "auth/weak-password")
                         displayPopup("ERROR", "Password is too weak.");
                     else
                         displayPopup("ERROR", error.message);
                     console.log(error);
                 });
-                displayPopup("SUCCESS", "Success!");
-                // sendConfirmationEmail();
             }
         } else {
             displayPopup("ERROR", "Passwords do not match!");
@@ -103,7 +105,6 @@
         }
     }
 
-    // Optional in this case.
     function sendConfirmationEmail() {
         firebase.auth().currentUser.sendEmailVerification().then(function() {
             alert("Email verification sent!");
@@ -114,13 +115,15 @@
     function displayPopup(type, message) {
         var msg = document.getElementById("message");
         var button = document.getElementById("confirm-button");
-        var seethroughScreen = document.getElementById("seethrough-screen");
+        var seethroughScreen = document.getElementById("see-through-screen");
         var confirmBox = document.getElementById("confirm-box");
 
         if (type === "SUCCESS") {
             msg.innerHTML = message;
             button.innerHTML = "Continue";
             button.className = "btn btn-positive btn-block";
+            localStorage.uid = ((firebase.auth()).currentUser).uid;
+            localStorage.email = ((firebase.auth()).currentUser).email;
             button.href = "edit.html";
         } else {
             msg.innerHTML = message;
