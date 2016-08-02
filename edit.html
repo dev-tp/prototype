@@ -13,7 +13,12 @@
     <script src="js/firebase-3.2.1.js"></script>
 
     <style type="text/css">
-        .container { padding: 20% 5%; }
+        .container {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            padding: 20% 5%;
+        }
         #see-through-screen {
             position: absolute;
             width: 100%;
@@ -37,6 +42,7 @@
             padding: 1em 0;
         }
         #content { margin: 10%; }
+        #email { display: none; }
     </style>
 </head>
 <body>
@@ -44,6 +50,7 @@
         <form>
             <input id="name" type="text" name="name" placeholder="Name">
             <textarea id="biography" rows="4" cols="50" placeholder="Biography"></textarea>
+            <input id="email" type="text" name="email" placeholder="Email">
             <div>
                 <h4>User Type:</h4>
                 <select id="user-type">
@@ -51,7 +58,10 @@
                     <option value="artist">Artist</option>
                 </select>
             </div>
-            <input id="birthday" type="date" name="birthday" placeholder="mm/dd/yyyy">
+            <div>
+                <h4>Birthday:</h4>
+                <input id="birthday" type="date" name="birthday" placeholder="mm/dd/yyyy">
+            </div>
         </form>
         <button onclick="send();" class="btn btn-positive btn-block">Done</button>
     </div>
@@ -82,14 +92,15 @@
     function send() {
         var user = firebase.database().ref("/users/" + localStorage.uid);
         var birthday = document.getElementById("birthday").value;
+
         user.set({
             name: document.getElementById("name").value,
             age: getAge(birthday),
-            email: localStorage.email, // What if .email was undefined?
+            email: localStorage.email ? localStorage.email : document.getElementById("email").value,
             type: document.getElementById("user-type").value,
             bio: document.getElementById("biography").value,
             birthday: birthday,
-            username: localStorage.username
+            username: localStorage.username ? localStorage.username : "default"
         });
 
         user.once("value").then(function(dataSnapshot) {
@@ -127,5 +138,10 @@
         seethroughScreen.style.display = "initial";
         confirmBox.style.display = "initial";
     }
+
+    window.onload = function() {
+        if (localStorage.email === undefined)
+            document.getElementById("email").style.display = "initial";
+    };
 </script>
 </html>
