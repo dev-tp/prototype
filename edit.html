@@ -19,6 +19,7 @@
             overflow-y: scroll;
             padding: 20% 5%;
         }
+
         #see-through-screen {
             position: absolute;
             width: 100%;
@@ -28,6 +29,7 @@
             background-color: rgba(0, 0, 0, 0.8);
             display: none;
         }
+
         #confirm-box {
             position: absolute;
             width: 15em;
@@ -37,18 +39,26 @@
             background-color: #fff;
             display: none;
         }
+
         #confirm-box h1 {
             text-align: center;
             padding: 1em 0;
         }
+
         #content { margin: 10%; }
+
         #email { display: none; }
+
+        #cancel-button { display: none; }
+
+        #username { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <form>
             <input id="name" type="text" name="name" placeholder="Name">
+            <input id="username" type="text" name="username" placeholder="Username">
             <textarea id="biography" rows="4" cols="50" placeholder="Biography"></textarea>
             <input id="email" type="text" name="email" placeholder="Email">
             <div>
@@ -64,6 +74,7 @@
             </div>
         </form>
         <button onclick="send();" class="btn btn-positive btn-block">Done</button>
+        <a id="cancel-button" href="settings.html" class="btn btn-negative btn-block">Cancel</a>
     </div>
 
     <div id="see-through-screen"></div>
@@ -100,7 +111,7 @@
             type: document.getElementById("user-type").value,
             bio: document.getElementById("biography").value,
             birthday: birthday,
-            username: localStorage.username ? localStorage.username : "default"
+            username: localStorage.username ? localStorage.username : document.getElementById("username").value
         });
 
         user.once("value").then(function(dataSnapshot) {
@@ -140,8 +151,22 @@
     }
 
     window.onload = function() {
-        if (localStorage.email === undefined)
+        var currentUser = JSON.parse(localStorage.currentUser);
+
+        if (localStorage.email === undefined) {
             document.getElementById("email").style.display = "initial";
+            document.getElementById("email").value = currentUser.email;
+
+            document.getElementById("username").style.display = "initial";
+            document.getElementById("username").value = currentUser.username;
+
+            document.getElementById("cancel-button").style.display = "block";
+        }
+
+        document.getElementById("name").value = currentUser.name;
+        document.getElementById("biography").value = currentUser.bio;
+        document.getElementById("user-type").value = currentUser.type;
+        document.getElementById("birthday").value = currentUser.birthday;
     };
 </script>
 </html>
