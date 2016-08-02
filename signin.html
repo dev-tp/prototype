@@ -15,7 +15,9 @@
 
     <style type="text/css">
         input[type="text"] { margin: 80% 0 0 0; }
+
         input[type="password"] { margin: 1em 0 30% 0; }
+
         #make-account { margin: 20% 0 0 0; }
 
         #splashscreen {
@@ -69,25 +71,15 @@
 
         @media screen and (min-width: 1000px) { #splashscreen { padding: 0; } }
 
-        @media screen and (min-width: 380px) {
-            #make-account { margin: 15% 0 0 0; }
-        }
+        @media screen and (min-width: 380px) { #make-account { margin: 15% 0 0 0; } }
 
-        @media screen and (min-width: 400px) {
-            input[type="password"] { margin: 1em 0 20% 0; }
-        }
+        @media screen and (min-width: 400px) { input[type="password"] { margin: 1em 0 20% 0; } }
 
-        @media screen and (min-width: 440px) {
-            input[type="password"] { margin: 1em 0 10% 0; }
-        }
+        @media screen and (min-width: 440px) { input[type="password"] { margin: 1em 0 10% 0; } }
 
-        @media screen and (min-width: 480px) {
-            input[type="text"] { margin: 55% 0 0 0; }
-        }
+        @media screen and (min-width: 480px) { input[type="text"] { margin: 55% 0 0 0; } }
 
-        @media screen and (min-width: 620px) {
-            input[type="text"] { margin: 35% 0 0 0; }
-        }
+        @media screen and (min-width: 620px) { input[type="text"] { margin: 35% 0 0 0; } }
 
         @media screen and (min-width: 825px) {
             input[type="text"] { margin: 30% 0 0 0; }
@@ -185,8 +177,6 @@
             firebase.database().ref("/users/" + uid).once("value").then(function(dataSnapshot) {
                 localStorage.currentUser = JSON.stringify(dataSnapshot.val());
                 localStorage.uid = uid;
-                // localStorage.auth = JSON.stringify(firebase.auth());
-                // localStorage.database = JSON.stringify(firebase.database());
             });
         } else {
             msg.innerHTML = message;

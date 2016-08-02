@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search</title>
+    <title>Settings</title>
     <meta charset="utf-8">
 
-    <!-- Sets initial viewport load and disables zooming  -->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-
-    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
@@ -15,23 +11,15 @@
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
 
     <style type="text/css">
-        input[type="search"] {
-            border-radius: 20px;
-            margin: 10px 0 0 0;
-        }
-
-        .container {
-            margin: auto 2%;
-        }
-
+        .container { padding: 50px 5%; }
     </style>
 </head>
 <body>
     <div class="container">
-        <form>
-            <input type="search" placeholder="Search">
-        </form>
+        <a href="#" class="btn btn-positive btn-block">Edit Profile</a>
+        <a href="signin.html" class="btn btn-negative btn-block">Log Out</a>
     </div>
+
     <nav class="bar bar-tab">
         <a class="tab-item" href="genres.html">
             <span class="icon icon-home"></span>
@@ -45,11 +33,11 @@
             <span class="icon icon-star-filled"></span>
             <span class="tab-label">Favorites</span>
         </a>
-        <a class="tab-item active" href="#">
+        <a class="tab-item" href="search.html">
             <span class="icon icon-search"></span>
             <span class="tab-label">Search</span>
         </a>
-        <a class="tab-item" href="settings.html">
+        <a class="tab-item active" href="#">
             <span class="icon icon-gear"></span>
             <span class="tab-label">Settings</span>
         </a>
