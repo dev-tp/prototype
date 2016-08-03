@@ -13,7 +13,13 @@
     <script src="js/firebase-3.2.1.js"></script>
 
     <style type="text/css">
-        .container { padding: 20% 5%; }
+        .container {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            padding: 20% 5%;
+        }
+
         #see-through-screen {
             position: absolute;
             width: 100%;
@@ -23,6 +29,7 @@
             background-color: rgba(0, 0, 0, 0.8);
             display: none;
         }
+
         #confirm-box {
             position: absolute;
             width: 15em;
@@ -32,28 +39,45 @@
             background-color: #fff;
             display: none;
         }
+
         #confirm-box h1 {
             text-align: center;
             padding: 1em 0;
         }
+
         #content { margin: 10%; }
+
+        #email { display: none; }
+
+        #cancel-button { display: none; }
+
+        #username { display: none; }
+
+        #artist-name { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <form>
             <input id="name" type="text" name="name" placeholder="Name">
+            <input id="username" type="text" name="username" placeholder="Username">
             <textarea id="biography" rows="4" cols="50" placeholder="Biography"></textarea>
+            <input id="email" type="text" name="email" placeholder="Email">
             <div>
                 <h4>User Type:</h4>
                 <select id="user-type">
                     <option value="normal">Normal</option>
                     <option value="artist">Artist</option>
                 </select>
+                <input id="artist-name" type="text" name="artist-name" placeholder="Artist Name">
             </div>
-            <input id="birthday" type="date" name="birthday" placeholder="mm/dd/yyyy">
+            <div>
+                <h4>Birthday:</h4>
+                <input id="birthday" type="date" name="birthday" placeholder="mm/dd/yyyy">
+            </div>
         </form>
         <button onclick="send();" class="btn btn-positive btn-block">Done</button>
+        <a id="cancel-button" href="settings.html" class="btn btn-negative btn-block">Cancel</a>
     </div>
 
     <div id="see-through-screen"></div>
@@ -80,20 +104,39 @@
     }
 
     function send() {
-        var user = firebase.database().ref("/users/" + localStorage.uid);
+        var userType = document.getElementById("user-type").value === "artist" ? "/artists/" : "/users/";
+
+        var user = firebase.database().ref(userType + localStorage.uid);
         var birthday = document.getElementById("birthday").value;
-        user.set({
-            name: document.getElementById("name").value,
+
+        var object = {
             age: getAge(birthday),
-            email: localStorage.email, // What if .email was undefined?
-            type: document.getElementById("user-type").value,
             bio: document.getElementById("biography").value,
             birthday: birthday,
-            username: localStorage.username
-        });
+            email: localStorage.email ? localStorage.email : document.getElementById("email").value,
+            name: document.getElementById("name").value,
+            type: document.getElementById("user-type").value,
+            username: localStorage.username ? localStorage.username : document.getElementById("username").value
+        };
+
+        if (userType === "/users/") {
+            user.set(object);
+        } else {
+            object.artistName = document.getElementById("artist-name").value;
+            object.likes = 0;
+            object.tracks = {
+                track0: {
+                    likes: 0,
+                    songName: "Track 0",
+                    emailThatLiked: "user@mail.com"
+                }
+            };
+            user.set(object);
+        }
 
         user.once("value").then(function(dataSnapshot) {
             localStorage.currentUser = JSON.stringify(dataSnapshot.val());
+            firebase.database().ref("/UIDs/" + localStorage.uid).set(object.type);
             delete localStorage.email;
             delete localStorage.username;
         });
@@ -127,5 +170,44 @@
         seethroughScreen.style.display = "initial";
         confirmBox.style.display = "initial";
     }
+
+    window.onload = function() {
+        var artistName = document.getElementById("artist-name");
+        var userType = document.getElementById("user-type");
+
+        userType.addEventListener("change", function() {
+            if (this.value === "artist")
+                artistName.style.display = "initial";
+            else
+                artistName.style.display = "none";
+        });
+
+        if (localStorage.currentUser !== undefined) {
+            var currentUser = JSON.parse(localStorage.currentUser);
+
+            var email = document.getElementById("email");
+            var username = document.getElementById("username");
+
+            if (currentUser.type === "artist") {
+                artistName.style.display = "initial";
+                artistName.value = currentUser.artistName;
+            }
+
+            if (localStorage.email === undefined) {
+                email.style.display = "initial";
+                email.value = currentUser.email;
+
+                username.style.display = "initial";
+                username.value = currentUser.username;
+
+                document.getElementById("cancel-button").style.display = "block";
+            }
+
+            document.getElementById("name").value = currentUser.name;
+            document.getElementById("biography").value = currentUser.bio;
+            document.getElementById("user-type").value = currentUser.type;
+            document.getElementById("birthday").value = currentUser.birthday;
+        }
+    };
 </script>
 </html>
