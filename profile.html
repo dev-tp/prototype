@@ -51,8 +51,6 @@
             margin: 30px 0 0 120px;
         }
 
-        #album-carousel { display: none; }
-
         @media screen and (max-height: 640px) { .carousel { margin: 0 0 15% 0; } }
     </style>
 </head>
@@ -154,7 +152,7 @@
         if (user.type !== "artist")
             carousel.style.display = "none";
         else
-            carousel.style.display = "initial";
+            carousel.style.display = "relative";
     };
 </script>
 </html>
