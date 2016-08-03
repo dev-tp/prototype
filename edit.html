@@ -104,18 +104,35 @@
     }
 
     function send() {
-        var user = firebase.database().ref("/users/" + localStorage.uid);
+        var userType = document.getElementById("user-type").value === "artist" ? "/artists/" : "/users/";
+
+        var user = firebase.database().ref(userType + localStorage.uid);
         var birthday = document.getElementById("birthday").value;
 
-        user.set({
-            name: document.getElementById("name").value,
+        var object = {
             age: getAge(birthday),
-            email: localStorage.email ? localStorage.email : document.getElementById("email").value,
-            type: document.getElementById("user-type").value,
             bio: document.getElementById("biography").value,
             birthday: birthday,
+            email: localStorage.email ? localStorage.email : document.getElementById("email").value,
+            name: document.getElementById("name").value,
+            type: document.getElementById("user-type").value,
             username: localStorage.username ? localStorage.username : document.getElementById("username").value
-        });
+        };
+
+        if (userType === "/users/") {
+            user.set(object);
+        } else {
+            object.artistName = document.getElementById("artist-name").value;
+            object.likes = 0;
+            object.tracks = {
+                track0: {
+                    likes: 0,
+                    songName: "Track 0",
+                    emailThatLiked: "user@mail.com"
+                }
+            };
+            user.set(object);
+        }
 
         user.once("value").then(function(dataSnapshot) {
             localStorage.currentUser = JSON.stringify(dataSnapshot.val());
@@ -154,11 +171,7 @@
     }
 
     window.onload = function() {
-        var currentUser = JSON.parse(localStorage.currentUser);
-
         var artistName = document.getElementById("artist-name");
-        var email = document.getElementById("email");
-        var username = document.getElementById("username");
         var userType = document.getElementById("user-type");
 
         userType.addEventListener("change", function() {
@@ -168,25 +181,32 @@
                 artistName.style.display = "none";
         });
 
-        if (currentUser.type === "artist") {
-            userType.style.display = "initial";
-            artistName.value = currentUser.artistName; // .username?
+        if (localStorage.currentUser !== undefined) {
+            var currentUser = JSON.parse(localStorage.currentUser);
+
+            var email = document.getElementById("email");
+            var username = document.getElementById("username");
+
+            if (currentUser.type === "artist") {
+                artistName.style.display = "initial";
+                artistName.value = currentUser.artistName;
+            }
+
+            if (localStorage.email === undefined) {
+                email.style.display = "initial";
+                email.value = currentUser.email;
+
+                username.style.display = "initial";
+                username.value = currentUser.username;
+
+                document.getElementById("cancel-button").style.display = "block";
+            }
+
+            document.getElementById("name").value = currentUser.name;
+            document.getElementById("biography").value = currentUser.bio;
+            document.getElementById("user-type").value = currentUser.type;
+            document.getElementById("birthday").value = currentUser.birthday;
         }
-
-        if (localStorage.email === undefined) {
-            email.style.display = "initial";
-            email.value = currentUser.email;
-
-            username.style.display = "initial";
-            username.value = currentUser.username;
-
-            document.getElementById("cancel-button").style.display = "block";
-        }
-
-        document.getElementById("name").value = currentUser.name;
-        document.getElementById("biography").value = currentUser.bio;
-        document.getElementById("user-type").value = currentUser.type;
-        document.getElementById("birthday").value = currentUser.birthday;
     };
 </script>
 </html>
