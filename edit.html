@@ -52,6 +52,8 @@
         #cancel-button { display: none; }
 
         #username { display: none; }
+
+        #artist-name { display: none; }
     </style>
 </head>
 <body>
@@ -67,6 +69,7 @@
                     <option value="normal">Normal</option>
                     <option value="artist">Artist</option>
                 </select>
+                <input id="artist-name" type="text" name="artist-name" placeholder="Artist Name">
             </div>
             <div>
                 <h4>Birthday:</h4>
@@ -153,12 +156,29 @@
     window.onload = function() {
         var currentUser = JSON.parse(localStorage.currentUser);
 
-        if (localStorage.email === undefined) {
-            document.getElementById("email").style.display = "initial";
-            document.getElementById("email").value = currentUser.email;
+        var artistName = document.getElementById("artist-name");
+        var email = document.getElementById("email");
+        var username = document.getElementById("username");
+        var userType = document.getElementById("user-type");
 
-            document.getElementById("username").style.display = "initial";
-            document.getElementById("username").value = currentUser.username;
+        userType.addEventListener("change", function() {
+            if (this.value === "artist")
+                artistName.style.display = "initial";
+            else
+                artistName.style.display = "none";
+        });
+
+        if (currentUser.type === "artist") {
+            userType.style.display = "initial";
+            artistName.value = currentUser.artistName; // .username?
+        }
+
+        if (localStorage.email === undefined) {
+            email.style.display = "initial";
+            email.value = currentUser.email;
+
+            username.style.display = "initial";
+            username.value = currentUser.username;
 
             document.getElementById("cancel-button").style.display = "block";
         }
