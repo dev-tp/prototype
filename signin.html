@@ -174,10 +174,17 @@
             button.href = "genres.html";
 
             var uid = ((firebase.auth()).currentUser).uid;
-            firebase.database().ref("/users/" + uid).once("value").then(function(dataSnapshot) {
-                localStorage.currentUser = JSON.stringify(dataSnapshot.val());
-                localStorage.uid = uid;
-            });
+            firebase.database().ref("UIDs").once("value").then(function(dataSnapshot) {
+                var userTypeRef = "/users/";
+
+                if (dataSnapshot.val()[uid] !== "normal")
+                    userTypeRef = "/artists/";
+
+                firebase.database().ref(userTypeRef + uid).once("value").then(function(snapshot) {
+                    localStorage.currentUser = JSON.stringify(snapshot.val());
+                    localStorage.uid = uid;
+                });
+            }); 
         } else {
             msg.innerHTML = message;
             button.innerHTML = "OK";
@@ -186,7 +193,7 @@
             button.onclick = function() {
                 seethroughScreen.style.display = "none";
                 confirmBox.style.display = "none";
-            }
+            };
         }
 
         seethroughScreen.style.display = "initial";
