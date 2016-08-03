@@ -136,6 +136,7 @@
 
         user.once("value").then(function(dataSnapshot) {
             localStorage.currentUser = JSON.stringify(dataSnapshot.val());
+            firebase.database().ref("/UIDs/" + localStorage.uid).set(object.type);
             delete localStorage.email;
             delete localStorage.username;
         });
