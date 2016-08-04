@@ -10,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="css/ratchet.min.css">
     <link rel="stylesheet" type="text/css" href="css/ratchet-theme-ios.min.css">
 
+    <script src="js/firebase-3.2.1.js"></script>
+
     <style type="text/css">
         .table-view {
             overflow-x: hidden;
@@ -50,15 +52,23 @@
             <span class="icon icon-search"></span>
             <span class="tab-label">Search</span>
         </a>
-        <a class="tab-item" href="settings.html">
+        <a class="tab-item" href="#">
             <span class="icon icon-gear"></span>
             <span class="tab-label">Settings</span>
         </a>
     </nav>
 
     <script type="text/javascript">
-        // TODO: With a database, update discover titles
-        function generateItem() {
+        var config = {
+            apiKey: "",
+            authDomain: "",
+            databaseURL: "",
+            storageBucket: "",
+        };
+
+        firebase.initializeApp(config);
+
+        function generateItem(artist, title, likes, reference) {
             var tableViewCell = document.createElement("li");
             tableViewCell.className = "table-view-cell media";
 
@@ -73,39 +83,38 @@
             mediaBody.className = "media-body";
 
             var header = document.createElement("h4");
-            header.innerHTML = "Item 1";
+            header.textContent = title;
             var paragraph = document.createElement('p');
-            paragraph.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Lorem ipsum dolor sit amet.";
+            paragraph.textContent = artist;
 
             mediaBody.appendChild(header);
             mediaBody.appendChild(paragraph);
             navigateRight.appendChild(mediaObject);
             navigateRight.appendChild(mediaBody);
-            navigateRight.appendChild(generateLitButton());
+            navigateRight.appendChild(generateLitButton(artist, title, likes, reference));
             tableViewCell.appendChild(navigateRight);
 
             return tableViewCell;
         }
 
-        function generateLitButton() {
+        function generateLitButton(artist, title, likes, reference) {
             var img = document.createElement("img");
             var count = document.createElement('p');
             var centre = document.createElement("center");
 
             img.src = "images/20x20/lit.png";
-            count.textContent = 0;
+            count.textContent = likes;
 
             centre.appendChild(img);
             centre.appendChild(count);
             centre.className = "lit-button";
             centre.active = false;
 
-            centre.addEventListener("click", function() {
+            centre.addEventListener("click", function(event) {
                 var image = this.childNodes[0];
                 var count = this.childNodes[1];
                 var currentCount = parseInt(count.textContent);
 
-                // TODO: Retrieve information from Firebase and update it
                 if (!this.active) {
                     image.src = "images/20x20/lit-active.png";
                     count.textContent = ++currentCount;
@@ -115,6 +124,12 @@
                     count.textContent = --currentCount;
                     this.active = false;
                 }
+
+                // DEBUG: reference does not update values
+                reference.set({
+                    songName: title,
+                    likes: likes
+                });
             });
 
             return centre;
@@ -122,9 +137,23 @@
 
         window.onload = function() {
             var tableView = document.getElementsByClassName("table-view")[0];
-            for (var i = 0; i < Math.round(Math.random() * 10); i++)
-                tableView.appendChild(generateItem());
-        }
+            firebase.database().ref("artists").on("value", function(dataSnapshot) {
+                var value = dataSnapshot.val();
+                var keys = Object.keys(value);
+
+                for (var i = 0; i < keys.length; i++) {
+                    var artist = value[keys[i]];
+                    var tracks = artist.tracks;
+
+                    for (var j = 0; j < Object.keys(tracks).length; j++) {
+                        var ref = firebase.database().ref("/artists/" + keys[i] + "/tracks/track" + j);
+                        var track = tracks["track" + j];
+
+                        tableView.appendChild(generateItem(artist.artistName, track.songName, track.likes, ref));
+                    }
+                }
+            });
+        };
     </script>
 </body>
 </html>
