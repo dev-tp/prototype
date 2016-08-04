@@ -16,7 +16,8 @@
         .table-view {
             overflow-x: hidden;
             overflow-y: scroll;
-            height: 98%;
+            height: 100%;
+            padding-bottom: 95px;
         }
 
         .navigate-right::after { content: ' '; }
@@ -33,7 +34,7 @@
         <h1 class="title">Discover</h1>
     </header>
 
-    <ul class="table-view"></ul>
+    <ul id="chart" class="table-view"></ul>
 
     <nav class="bar bar-tab">
         <a class="tab-item" href="genres.html">
@@ -52,108 +53,106 @@
             <span class="icon icon-search"></span>
             <span class="tab-label">Search</span>
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" href="settings.html">
             <span class="icon icon-gear"></span>
             <span class="tab-label">Settings</span>
         </a>
     </nav>
-
-    <script type="text/javascript">
-        var config = {
-            apiKey: "",
-            authDomain: "",
-            databaseURL: "",
-            storageBucket: "",
-        };
-
-        firebase.initializeApp(config);
-
-        function generateItem(artist, title, likes, reference) {
-            var tableViewCell = document.createElement("li");
-            tableViewCell.className = "table-view-cell media";
-
-            var navigateRight = document.createElement("div");
-            navigateRight.className = "navigate-right";
-
-            var mediaObject = document.createElement("img");
-            mediaObject.src = "http://placehold.it/42x42";
-            mediaObject.className = "media-object pull-left";
-
-            var mediaBody = document.createElement("div");
-            mediaBody.className = "media-body";
-
-            var header = document.createElement("h4");
-            header.textContent = title;
-            var paragraph = document.createElement('p');
-            paragraph.textContent = artist;
-
-            mediaBody.appendChild(header);
-            mediaBody.appendChild(paragraph);
-            navigateRight.appendChild(mediaObject);
-            navigateRight.appendChild(mediaBody);
-            navigateRight.appendChild(generateLitButton(artist, title, likes, reference));
-            tableViewCell.appendChild(navigateRight);
-
-            return tableViewCell;
-        }
-
-        function generateLitButton(artist, title, likes, reference) {
-            var img = document.createElement("img");
-            var count = document.createElement('p');
-            var centre = document.createElement("center");
-
-            img.src = "images/20x20/lit.png";
-            count.textContent = likes;
-
-            centre.appendChild(img);
-            centre.appendChild(count);
-            centre.className = "lit-button";
-            centre.active = false;
-
-            centre.addEventListener("click", function(event) {
-                var image = this.childNodes[0];
-                var count = this.childNodes[1];
-                var currentCount = parseInt(count.textContent);
-
-                if (!this.active) {
-                    image.src = "images/20x20/lit-active.png";
-                    count.textContent = ++currentCount;
-                    this.active = true;
-                } else {
-                    image.src = "images/20x20/lit.png";
-                    count.textContent = --currentCount;
-                    this.active = false;
-                }
-
-                // DEBUG: reference does not update values
-                reference.set({
-                    songName: title,
-                    likes: likes
-                });
-            });
-
-            return centre;
-        }
-
-        window.onload = function() {
-            var tableView = document.getElementsByClassName("table-view")[0];
-            firebase.database().ref("artists").on("value", function(dataSnapshot) {
-                var value = dataSnapshot.val();
-                var keys = Object.keys(value);
-
-                for (var i = 0; i < keys.length; i++) {
-                    var artist = value[keys[i]];
-                    var tracks = artist.tracks;
-
-                    for (var j = 0; j < Object.keys(tracks).length; j++) {
-                        var ref = firebase.database().ref("/artists/" + keys[i] + "/tracks/track" + j);
-                        var track = tracks["track" + j];
-
-                        tableView.appendChild(generateItem(artist.artistName, track.songName, track.likes, ref));
-                    }
-                }
-            });
-        };
-    </script>
 </body>
+<script type="text/javascript">
+    var config = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        storageBucket: "",
+    };
+
+    firebase.initializeApp(config);
+
+    function generateItem(artist, title, likes, reference) {
+        var tableViewCell = document.createElement("li");
+        tableViewCell.className = "table-view-cell media";
+
+        var navigateRight = document.createElement("div");
+        navigateRight.className = "navigate-right";
+
+        var mediaObject = document.createElement("img");
+        mediaObject.src = "http://placehold.it/42x42";
+        mediaObject.className = "media-object pull-left";
+
+        var mediaBody = document.createElement("div");
+        mediaBody.className = "media-body";
+
+        var header = document.createElement("h4");
+        header.textContent = title;
+        var paragraph = document.createElement('p');
+        paragraph.textContent = artist;
+
+        mediaBody.appendChild(header);
+        mediaBody.appendChild(paragraph);
+        navigateRight.appendChild(mediaObject);
+        navigateRight.appendChild(mediaBody);
+        navigateRight.appendChild(generateLitButton(artist, title, likes, reference));
+        tableViewCell.appendChild(navigateRight);
+
+        return tableViewCell;
+    }
+
+    function generateLitButton(artist, title, likes, reference) {
+        var img = document.createElement("img");
+        var count = document.createElement('p');
+        var centre = document.createElement("center");
+
+        img.src = "images/20x20/lit.png";
+        count.textContent = likes;
+
+        centre.appendChild(img);
+        centre.appendChild(count);
+        centre.className = "lit-button";
+        centre.active = false;
+
+        centre.addEventListener("click", function(event) {
+            var image = this.childNodes[0];
+            var count = this.childNodes[1];
+            var currentCount = parseInt(count.textContent);
+
+            if (!this.active) {
+                image.src = "images/20x20/lit-active.png";
+                count.textContent = ++currentCount;
+                this.active = true;
+            } else {
+                image.src = "images/20x20/lit.png";
+                count.textContent = --currentCount;
+                this.active = false;
+            }
+
+            reference.set({ // What about .update?
+                songName: title,
+                likes: currentCount
+            });
+        });
+
+        return centre;
+    }
+
+    window.onload = function() {
+        var tableView = document.getElementsByClassName("table-view")[0];
+        firebase.database().ref("artists").once("value", function(dataSnapshot) {
+            var value = dataSnapshot.val();
+            var keys = Object.keys(value);
+
+            for (var i = 0; i < keys.length; i++) {
+                var artist = value[keys[i]];
+                var tracks = artist.tracks;
+
+                for (var j = 0; j < Object.keys(tracks).length; j++) {
+                    var ref = firebase.database().ref("/artists/" + keys[i] + "/tracks/track" + j);
+                    var track = tracks["track" + j];
+
+                    tableView.appendChild(generateItem(artist.artistName, track.songName, track.likes, ref));
+                }
+            }
+        });
+    };
+</script>
 </html>
