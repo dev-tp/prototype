@@ -122,6 +122,11 @@
 
     firebase.initializeApp(config);
 
+    if (localStorage.currentUser !== undefined) {
+        delete localStorage.currentUser;
+        delete localStorage.uid;
+    }
+
     function signIn() {
         var email = document.getElementsByTagName("input")[0].value;
         var password = document.getElementsByTagName("input")[1].value;
