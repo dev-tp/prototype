@@ -124,15 +124,6 @@
         } else {
             object.artistName = document.getElementById("artist-name").value;
             object.likes = 0;
-            object.tracks = {
-                // What if there are already songs?
-                track0: {
-                    likes: 0,
-                    songName: "Track 0",
-                    emailThatLiked: "user@mail.com",
-                    imageURL: "url://"
-                }
-            };
             user.set(object);
         }
 
