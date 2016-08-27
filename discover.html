@@ -27,6 +27,8 @@
             top: 30%;
             right: 15px;
         }
+
+        .media-body { font-family: "Myriad Pro"; }
     </style>
 </head>
 <body>
@@ -69,7 +71,7 @@
 
     firebase.initializeApp(config);
 
-    function generateItem(artist, title, likes, reference) {
+    function generateItem(artist, title, likes, albumCover, artistLikes, reference) {
         var tableViewCell = document.createElement("li");
         tableViewCell.className = "table-view-cell media";
 
@@ -77,7 +79,7 @@
         navigateRight.className = "navigate-right";
 
         var mediaObject = document.createElement("img");
-        mediaObject.src = "http://placehold.it/42x42";
+        mediaObject.src = albumCover;
         mediaObject.className = "media-object pull-left";
 
         var mediaBody = document.createElement("div");
@@ -92,16 +94,24 @@
         mediaBody.appendChild(paragraph);
         navigateRight.appendChild(mediaObject);
         navigateRight.appendChild(mediaBody);
-        navigateRight.appendChild(generateLitButton(artist, title, likes, reference));
+        navigateRight.appendChild(generateLitButton(artist, title, likes, artistLikes, reference));
         tableViewCell.appendChild(navigateRight);
 
         return tableViewCell;
     }
 
-    function generateLitButton(artist, title, likes, reference) {
+    // TODO: Create a snapshot to avoid reloads from Firebase
+    function generateLitButton(artist, title, likes, artistLikes, reference) {
+        var totalLikes;
+        artistLikes.on("value", function(dataSnapshot) {
+            totalLikes = dataSnapshot.val();
+        });
+
         var img = document.createElement("img");
         var count = document.createElement('p');
         var centre = document.createElement("center");
+
+        var who = reference.child("who/" + localStorage.uid);
 
         img.src = "images/20x20/lit.png";
         count.textContent = likes;
@@ -109,7 +119,11 @@
         centre.appendChild(img);
         centre.appendChild(count);
         centre.className = "lit-button";
-        centre.active = false;
+        who.on("value", function(dataSnapshot) {
+            centre.active = dataSnapshot.val();
+            if (centre.active)
+                img.src = "images/20x20/lit-active.png";
+        });
 
         centre.addEventListener("click", function(event) {
             var image = this.childNodes[0];
@@ -119,19 +133,21 @@
             if (!this.active) {
                 image.src = "images/20x20/lit-active.png";
                 count.textContent = ++currentCount;
+                ++totalLikes;
+                who.set(true);
                 this.active = true;
             } else {
                 image.src = "images/20x20/lit.png";
                 count.textContent = --currentCount;
+                --totalLikes;
+                who.set(false);
                 this.active = false;
             }
 
             sortChart();
 
-            reference.set({
-                songName: title,
-                likes: currentCount
-            });
+            reference.update({ likes: currentCount });
+            artistLikes.set(totalLikes);
         });
 
         return centre;
@@ -164,9 +180,10 @@
 
                 for (var j = 0; j < Object.keys(tracks).length; j++) {
                     var ref = firebase.database().ref("/artists/" + keys[i] + "/tracks/track" + j);
+                    var artistLikes = firebase.database().ref("/artists/" + keys[i] + "/likes");
                     var track = tracks["track" + j];
 
-                    tableView.appendChild(generateItem(artist.artistName, track.songName, track.likes, ref));
+                    tableView.appendChild(generateItem(artist.artistName, track.songName, track.likes, track.albumCover, artistLikes, ref));
                 }
             }
 
