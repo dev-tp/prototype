@@ -27,15 +27,15 @@
 
         #confirm-box {
             position: absolute;
-            width: 15em;
-            height: 15em;
-            top: 25%;
-            left: 25%;
+            width: 16em;
+            top: 50%;
+            left: 50%;
             background-color: #fff;
+            transform: translate(-50%, -50%); /* Quick fix for now */
             display: none;
         }
 
-        #confirm-box h1 {
+        #confirm-box h2 {
             text-align: center;
             padding: 1em 0;
         }
@@ -57,7 +57,7 @@
     <div id="see-through-screen"></div>
     <div id="confirm-box">
         <div id="content">
-            <h1 id="message"></h1>
+            <h2 id="message"></h2>
             <a id="confirm-button" href="#"></a>
         </div>
     </div>
@@ -111,7 +111,6 @@
         });
     }
 
-    // TODO: Fix confirm-box dimensions and positions on multiple screens.
     function displayPopup(type, message) {
         var msg = document.getElementById("message");
         var button = document.getElementById("confirm-button");
@@ -133,7 +132,7 @@
             button.onclick = function() {
                 seethroughScreen.style.display = "none";
                 confirmBox.style.display = "none";
-            }
+            };
         };
 
         seethroughScreen.style.display = "initial";
